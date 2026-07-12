@@ -1,0 +1,35 @@
+{
+  "dependencies": {
+    "axios": "^1.6.8",
+    "bcryptjs": "^3.0.3",
+    "cloudinary": "^2.10.0",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.6",
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^9.2.1",
+    "multer": "^2.0.2",
+    "multer-storage-cloudinary": "^4.0.0"
+  },
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "start": "nodemon server.js",
+    "import:medicines": "node src/scripts/importOpenFdaMedicines.js",
+    "seed:fda": "node src/scripts/seedFDADrugs.js",
+    "seed:comprehensive": "node src/scripts/seedComprehensiveMedicines.js",
+    "seed:metrics": "node src/scripts/seedMetrics.js",
+    "seed:all": "npm run seed:comprehensive && npm run seed:metrics",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "devDependencies": {
+    "nodemon": "^3.1.11"
+  }
+}
