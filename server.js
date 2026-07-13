@@ -1,9 +1,10 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
+import cookieParser from "cookie-parser";
+
 import connectDB from "./src/config/db.js";
 import authRoutes from "./src/routes/authroutes.js";
-import cookieParser from "cookie-parser";
 import productRoutes from "./src/routes/product.routes.js";
 import prescriptionRoutes from "./src/routes/prescriptionRoutes.js";
 import adminPrescriptionRoutes from "./src/routes/adminPrescriptionRoutes.js";
@@ -20,6 +21,9 @@ dotenv.config();
 
 const app = express();
 
+// Connect to MongoDB
+connectDB();
+
 /* -------------------- MIDDLEWARES -------------------- */
 app.use(express.json({ limit: "2mb" }));
 app.use(express.urlencoded({ extended: true, limit: "2mb" }));
@@ -34,11 +38,11 @@ app.use(
 
 /* -------------------- TEST ROUTE -------------------- */
 app.get("/", (req, res) => {
-  res.send("Server is running 🚀");
+  res.json({
+    success: true,
+    message: "Server is running 🚀",
+  });
 });
-
-/* -------------------- DATABASE -------------------- */
-connectDB();
 
 /* -------------------- ROUTES -------------------- */
 app.use("/api/auth", authRoutes);
@@ -54,13 +58,8 @@ app.use("/api/admin/products", adminProductRoutes);
 app.use("/api/admin/prescriptions", adminPrescriptionRoutes);
 app.use("/api/admin/orders", adminOrderRoutes);
 
-// Keeps unexpected errors from leaking implementation details to clients.
+/* -------------------- ERROR HANDLER -------------------- */
 app.use(errorHandler);
 
-/* -------------------- SERVER -------------------- */
-const PORT = process.env.PORT || 5001;
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
-});
-
-//node src/scripts/seedProducts.js
+// Export Express app for Vercel
+export default app;
