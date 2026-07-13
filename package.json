@@ -17,7 +17,8 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "start": "nodemon server.js",
+    "start": "node server.js",
+    "dev": "nodemon server.js",
     "import:medicines": "node src/scripts/importOpenFdaMedicines.js",
     "seed:fda": "node src/scripts/seedFDADrugs.js",
     "seed:comprehensive": "node src/scripts/seedComprehensiveMedicines.js",
