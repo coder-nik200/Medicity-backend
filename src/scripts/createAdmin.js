@@ -9,9 +9,9 @@ const createAdmin = async () => {
   try {
     await mongoose.connect(process.env.MONGO_URI);
     console.log("Connected to DB ✅");
-    const ADMIN_NAME = process.env.ADMIN_NAME || "Pharmacy Admin";
-    const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "admin@pharmacy.com";
-    const ADMIN_PASS = process.env.ADMIN_PASS || "admin123";
+    const ADMIN_NAME = process.env.ADMIN_NAME;
+    const ADMIN_EMAIL = process.env.ADMIN_EMAIL;
+    const ADMIN_PASS = process.env.ADMIN_PASS;
 
     // check if admin with the same email already exists
     const adminExists = await User.findOne({ email: ADMIN_EMAIL });
