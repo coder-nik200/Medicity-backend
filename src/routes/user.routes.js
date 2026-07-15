@@ -4,7 +4,7 @@ import { updateUserProfile } from "../controllers/user.controller.js";
 import Order from "../models/Order.js";
 import Address from "../models/Address.js";
 import Prescription from "../models/Prescription.js";
-import Cart from "../models/Cart.js";
+import Cart from "../models/cart.js";
 
 const router = express.Router();
 
