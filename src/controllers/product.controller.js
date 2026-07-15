@@ -1,4 +1,5 @@
 import Product from "../models/Product.js";
+import { uploadToCloudinary } from "../utils/uploadToCloudinary.js";
 
 const escapeRegex = (value = "") => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 const asList = (value) => (Array.isArray(value) ? value : String(value || "").split(",")).map((item) => item.trim()).filter(Boolean);
@@ -57,7 +58,16 @@ const sortMap = {
 export const createProduct = async (req, res) => {
   try {
     const body = { ...req.body };
-    if (req.file) body.image = req.file.path;
+    // if (req.file) body.image = req.file.path;
+    if (req.file) {
+      const uploaded = await uploadToCloudinary(
+        req.file.buffer,
+        "products"
+      );
+
+      body.image = uploaded.secure_url;
+      body.imagePublicId = uploaded.public_id;
+    }
     if (!body.image && !body.images) body.image = undefined;
     ["uses", "sideEffects", "precautions", "warnings", "tags", "images"].forEach((key) => {
       if (body[key]) body[key] = asList(body[key]);

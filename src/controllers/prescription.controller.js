@@ -2,6 +2,7 @@ import Prescription from "../models/Prescription.js";
 import cloudinary from "../config/cloudinary.js";
 import Product from "../models/Product.js";
 import mongoose from "mongoose";
+import { uploadToCloudinary } from "../utils/uploadToCloudinary.js";
 
 /**
  * Upload prescription
@@ -65,14 +66,19 @@ export const uploadPrescription = async (req, res) => {
       });
     }
 
-    const prescription = await Prescription.create({
-      user: req.user._id,
-      medicine: medicine._id,
-      fileUrl: req.file.path,
-      filePublicId: req.file.filename,
-      notes: notes || "",
-      status: "pending",
-    });
+  const uploaded = await uploadToCloudinary(
+    req.file.buffer,
+    "prescriptions"
+  );
+
+  const prescription = await Prescription.create({
+    user: req.user._id,
+    medicine: medicine._id,
+    fileUrl: uploaded.secure_url,
+    filePublicId: uploaded.public_id,
+    notes: notes || "",
+    status: "pending",
+  });
 
     await prescription.populate(
       "medicine",
