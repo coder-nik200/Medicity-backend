@@ -29,17 +29,17 @@ app.use(express.json({ limit: "2mb" }));
 app.use(express.urlencoded({ extended: true, limit: "2mb" }));
 app.use(cookieParser());
 
-const allowedOrigins = [
-  "http://localhost:5173",
-  "https://frontend-taupe-five-12.vercel.app",
-];
-
 app.use(
   cors({
     origin(origin, callback) {
-      if (!origin || allowedOrigins.includes(origin)) {
+      if (
+        !origin ||
+        origin === "http://localhost:5173" ||
+        /\.vercel\.app$/.test(new URL(origin).hostname)
+      ) {
         return callback(null, true);
       }
+
       callback(new Error("Not allowed by CORS"));
     },
     credentials: true,
