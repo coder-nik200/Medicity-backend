@@ -8,7 +8,7 @@ const cartItemSchema = new mongoose.Schema({
   },
 
   quantity: {
-    tycpe: Number,
+    type: Number,
     required: true,
     min: 1,
   },
