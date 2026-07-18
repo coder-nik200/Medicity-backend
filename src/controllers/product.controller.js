@@ -85,19 +85,21 @@ export const createProduct = async (req, res) => {
 
 export const getAllProducts = async (req, res) => {
   try {
-    const count = await Product.countDocuments();
-
-    return res.json({
-      success: true,
-      count,
-    });
+    const page = Math.max(1, Number.parseInt(req.query.page, 10) || 1);
+    const limit = Math.min(100, Math.max(1, Number.parseInt(req.query.limit, 10) || 24));
+    const filter = buildFilter(req.query, { includeInactive: req.query.isActive !== undefined });
+    if (req.query.isActive !== undefined) filter.isActive = req.query.isActive === "true";
+    const searchFilter = buildSearchFilter(req.query.q || req.query.search);
+    if (searchFilter) filter.$and = [searchFilter];
+    const sort = sortMap[req.query.sort] || (req.query.q || req.query.search ? { score: { $meta: "textScore" }, totalSold: -1 } : sortMap.newest);
+    const projection = req.query.q || req.query.search ? { score: { $meta: "textScore" } } : {};
+    const [products, total] = await Promise.all([
+      Product.find(filter, projection).sort(sort).skip((page - 1) * limit).limit(limit).lean(),
+      Product.countDocuments(filter),
+    ]);
+    res.json({ success: true, count: products.length, data: products, pagination: { page, limit, total, pages: Math.ceil(total / limit), hasNextPage: page * limit < total } });
   } catch (error) {
-    console.error(error);
-
-    return res.status(500).json({
-      success: false,
-      error: error.message,
-    });
+    res.status(500).json({ success: false, message: "Unable to fetch medicines" });
   }
 };
 
