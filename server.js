@@ -22,7 +22,7 @@ dotenv.config();
 const app = express();
 
 // Connect to MongoDB
-connectDB();
+await connectDB();
 
 /* -------------------- MIDDLEWARES -------------------- */
 app.use(express.json({ limit: "2mb" }));
